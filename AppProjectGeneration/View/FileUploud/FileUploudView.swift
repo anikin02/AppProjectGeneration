@@ -54,7 +54,7 @@ struct FileUploudView: View {
       }
       .padding(40)
       
-      NavigationLink(destination: ResultView() {
+      NavigationLink(destination: ResultView()) {
         if let _ = droppedFileName {
           Text("Сгенерировать проект")
             .foregroundStyle(.gray)
