@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		78B23C6D2F58028300A70F10 /* BeautifulMermaid in Frameworks */ = {isa = PBXBuildFile; productRef = 78B23C6C2F58028300A70F10 /* BeautifulMermaid */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		7831B95E2E8942150091C47F /* AppProjectGeneration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppProjectGeneration.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78B23C6D2F58028300A70F10 /* BeautifulMermaid in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +70,7 @@
 			);
 			name = AppProjectGeneration;
 			packageProductDependencies = (
+				78B23C6C2F58028300A70F10 /* BeautifulMermaid */,
 			);
 			productName = AppProjectGeneration;
 			productReference = 7831B95E2E8942150091C47F /* AppProjectGeneration.app */;
@@ -94,6 +100,9 @@
 			);
 			mainGroup = 7831B9552E8942150091C47F;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				78B23C6B2F58028200A70F10 /* XCRemoteSwiftPackageReference "beautiful-mermaid-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7831B95F2E8942150091C47F /* Products */;
 			projectDirPath = "";
@@ -319,6 +328,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		78B23C6B2F58028200A70F10 /* XCRemoteSwiftPackageReference "beautiful-mermaid-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lukilabs/beautiful-mermaid-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		78B23C6C2F58028300A70F10 /* BeautifulMermaid */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 78B23C6B2F58028200A70F10 /* XCRemoteSwiftPackageReference "beautiful-mermaid-swift" */;
+			productName = BeautifulMermaid;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7831B9562E8942150091C47F /* Project object */;
 }
