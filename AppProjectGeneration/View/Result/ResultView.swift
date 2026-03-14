@@ -14,14 +14,41 @@ struct ResultView: View {
   
   var body: some View {
     VStack {
+      
+      HStack {
+        
+        Spacer()
+        
+        Slider(value: $viewModel.diagramScale, in: 0.1...4,
+               minimumValueLabel: Image(systemName: "minus.magnifyingglass"), maximumValueLabel: Image(systemName: "plus.magnifyingglass")) {
+          Text("Изменить масштаб диаграммы")
+        }
+               .frame(maxWidth: 500)
+               .padding(.horizontal, 10)
+        
+        Button() {
+          viewModel.resetDiagramScale()
+        } label: {
+          Text("Венуть изначальный масштаб")
+        }
+        .buttonStyle(.accessoryBarAction)
+        
+        themesMenu()
+        
+        Spacer()
+      }
+      .padding(10)
+      
       ScrollView([.horizontal, .vertical]) {
         if let image = image {
           Image(nsImage: image)
             .resizable()
-            .scaledToFit()
-            .frame(maxWidth: 800)
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 700 * viewModel.diagramScale)
         }
       }
+      .frame(maxWidth: .infinity, maxHeight: 600)
+      
       HStack {
         if let image = image {
           Button() {
@@ -34,13 +61,53 @@ struct ResultView: View {
       
       Spacer()
       
-      VStack {
-        
-      }
+      
     }
     .onAppear() {
+      createImage(theme: .default)
+    }
+  }
+  
+  private func themesMenu() -> some View {
+    Menu("Внешний вид диаграммы") {
+      Button() {
+        createImage(theme: .default)
+      } label: {
+        Text("Стандартный")
+      }
+      
+      Button() {
+        createImage(theme: .githubLight)
+      } label: {
+        Text("GitHub Light")
+      }
+      
+      Button() {
+        createImage(theme: .githubDark)
+      } label: {
+        Text("GitHub Dark")
+      }
+      
+      Button() {
+        createImage(theme: .tokyoNightLight)
+      } label: {
+        Text("Tokyo Light")
+      }
+      
+      Button() {
+        createImage(theme: .tokyoNight)
+      } label: {
+        Text("Tokyo Night")
+      }
+    }
+  }
+  
+  
+  // MARK: Image
+  private func createImage(theme: DiagramTheme) {
+    DispatchQueue.main.async {
       do {
-        image = try MermaidRenderer.renderImage(source: viewModel.mermaidCode)
+        image = try MermaidRenderer.renderImage(source: viewModel.mermaidCode, theme: theme)
       } catch {
         print("Ошибка: \(error)")
       }

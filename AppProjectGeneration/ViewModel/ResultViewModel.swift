@@ -5,6 +5,7 @@
 //  Created by Данил Аникин on 06/03/2026.
 //
 import Foundation
+import BeautifulMermaid
 
 class TestData {
   var user: AppObject
@@ -68,6 +69,11 @@ class TestData {
 
 class ResultViewModel: ObservableObject {
   @Published var mermaidCode: String = ""
+  @Published var diagramScale: Double = 1
+  @Published var selectedMermaidTheme: String = "Default"
+  
+  let mermaidTheme: [String] = ["Default", "Dracula", "Tokyo Night", ]
+  
   var project: DesignData
   
   init() {
@@ -80,9 +86,12 @@ class ResultViewModel: ObservableObject {
     project.objects.append(testData.transaction2)
     project.objects.append(testData.transaction3)
     
-    
+    mermaidCode = getMermaidCode()
   }
   
+  func resetDiagramScale() {
+    diagramScale = 1
+  }
   
   private func getMermaidCode() -> String {
     var code: String = "erDiagram"
