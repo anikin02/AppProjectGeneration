@@ -12,6 +12,7 @@ struct ResultView: View {
   @SwiftUI.State var image: NSImage? = nil
   @ObservedObject var viewModel = ResultViewModel()
   
+  
   var body: some View {
     VStack {
       

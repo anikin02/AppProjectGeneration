@@ -12,6 +12,12 @@ struct FileUploudView: View {
   @State private var dropImage = Image(systemName: "square.and.arrow.down")
   @State private var droppedFileName: String? = nil
   @State private var isTargeted: Bool = false
+  @State private var droppedFileContent: String?
+  @State private var navigateToResult = false
+  @State private var parsedObjects: [AppObject] = []
+  @State private var parseError: String? = nil
+  @State private var pendingDrop: (name: String, content: String)?
+  private var resultView = ResultView()
   
   var body: some View {
     VStack(alignment: .center) {
@@ -54,23 +60,30 @@ struct FileUploudView: View {
       }
       .padding(40)
       
-      NavigationLink(destination: ResultView()) {
-        if let _ = droppedFileName {
-          Text("Сгенерировать проект")
-            .foregroundStyle(.gray)
-            .font(.system(size: 14, weight: .black))
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .cornerRadius(8)
-        } else {
-          Text("Ожидание файла...")
-            .foregroundStyle(.gray)
-            .font(.system(size: 14, weight: .black))
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .cornerRadius(8)
+      Button {
+        guard let droppedFileContent else { return }
+        
+        let objects = Parser.shared.parseAppObjects(from: droppedFileContent)
+        if objects.isEmpty {
+          parseError = "Файл не содержит объектов"
+          return
         }
+        parsedObjects = objects
+        resultView.viewModel.project.objects = parsedObjects
+        parseError = nil
+        navigateToResult = true
+        
+      } label: {
+        Text(droppedFileName != nil ? "Сгенерировать проект" : "Ожидание файла...")
+          .foregroundStyle(.gray)
+          .font(.system(size: 14, weight: .black))
+          .padding(.horizontal, 12)
+          .padding(.vertical, 6)
       }
+      .navigationDestination(isPresented: $navigateToResult) {
+        resultView
+      }
+      .disabled(droppedFileName == nil)
       
       if let _ = droppedFileName {
         Button {
@@ -106,23 +119,42 @@ struct FileUploudView: View {
   }
   
   private func handleDrop(providers: [NSItemProvider]) -> Bool {
-    for provider in providers {
-      if provider.hasItemConformingToTypeIdentifier(UTType.rtf.identifier) {
-        provider.loadItem(forTypeIdentifier: UTType.rtf.identifier, options: nil) { item, error in
-          DispatchQueue.main.async {
-            if let url = item as? URL {
+    guard let provider = providers.first else { return false }
+    
+    if provider.hasItemConformingToTypeIdentifier(UTType.rtf.identifier) {
+      
+      provider.loadFileRepresentation(forTypeIdentifier: UTType.rtf.identifier) { url, error in
+        if let error = error {
+          print("Error: \(error)")
+          return
+        }
+        
+        guard let url else { return }
+        
+        do {
+          let data = try Data(contentsOf: url)
+          
+          if let attributedString = try? NSAttributedString(
+            data: data,
+            options: [.documentType: NSAttributedString.DocumentType.rtf],
+            documentAttributes: nil
+          ) {
+            DispatchQueue.main.async {
               self.droppedFileName = url.lastPathComponent
-              switchDragAndDropView()
+              self.droppedFileContent = attributedString.string
+              self.switchDragAndDropView()
             }
           }
+        } catch {
+          print("Read error: \(error)")
         }
-        return true
       }
       
+      return true
     }
+    
     return false
   }
-  
 }
 
 #Preview {

@@ -7,5 +7,5 @@
 
 struct AppObject {
   let name: String
-  var arguments: [Argument]
+  var arguments: [Argument] = []
 }
