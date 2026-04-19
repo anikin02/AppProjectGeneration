@@ -8,8 +8,8 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
-struct FileUploudView: View {
-  @ObservedObject var viewModel = FileUploudViewModel()
+struct FileUploadView: View {
+  @ObservedObject var viewModel = FileUploadViewModel()
   private var resultView = ResultView()
   
   var body: some View {
@@ -90,6 +90,6 @@ struct FileUploudView: View {
 }
 
 #Preview {
-  FileUploudView()
+  FileUploadView()
 }
 
