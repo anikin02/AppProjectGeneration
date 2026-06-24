@@ -14,7 +14,7 @@ struct ResultView: View {
   
   
   var body: some View {
-    VStack {
+    ScrollView {
       
       HStack {
         
@@ -48,7 +48,7 @@ struct ResultView: View {
             .frame(width: 700 * viewModel.diagramScale)
         }
       }
-      .frame(maxWidth: .infinity, maxHeight: 600)
+      .frame(maxWidth: .infinity, maxHeight: 900)
       
       HStack {
         if let image = image {
@@ -59,6 +59,29 @@ struct ResultView: View {
           }
         }
       }
+      
+      VStack {
+        HStack(alignment: .top) {
+          Text("Требования")
+            .font(.title2)
+            .fontWeight(.semibold)
+          
+        }
+          VStack(alignment: .leading, spacing: 8) {
+            ForEach(viewModel.requirements, id: \.self) { item in
+              Text(item)
+            }
+          }
+          .frame(maxWidth: .infinity)
+        HStack {
+          Button() {
+            saveTextToFile(text: viewModel.requirements.joined(separator: "\n"), fileName: "String")
+          } label: {
+            Text("Сохранить требования")
+          }
+        }
+      }
+      .frame(maxWidth: .infinity)
       
       Spacer()
       
@@ -134,8 +157,26 @@ struct ResultView: View {
       }
     }
   }
+  
+  private func saveTextToFile(text: String, fileName: String) {
+    let savePanel = NSSavePanel()
+    savePanel.allowedContentTypes = [.plainText]
+    savePanel.nameFieldStringValue = "\(fileName).txt"
+    
+    savePanel.begin { result in
+      if result == .OK, let url = savePanel.url {
+        do {
+          try text.write(to: url, atomically: true, encoding: .utf8)
+          print("Текст сохранен: \(url)")
+        } catch {
+          print("Ошибка сохранения: \(error)")
+        }
+      }
+    }
+  }
 }
 
 #Preview {
   ResultView()
 }
+

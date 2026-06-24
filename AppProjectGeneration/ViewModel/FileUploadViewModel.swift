@@ -15,22 +15,39 @@ final class FileUploadViewModel: ObservableObject {
   @Published var droppedFileContent: String? = nil
   @Published var navigateToResult = false
   @Published var dropImageName: String = "square.and.arrow.down"
-  @Published var errorMessage: String? = nil
+  @Published var errorMessage: String = ""
+  @Published var showError: Bool = false
   
-  private var parsedObjects: [AppObject] = []
+  @Published var isLoading: Bool = false
+  
+  @Published var parsedObjects: [AppObject] = []
+  @Published var parsedRequirements: [String] = []
   
   func parseButton() {
     guard let value = droppedFileContent else { return }
+    isLoading = true
     
     let objects = Parser.shared.parseAppObjects(from: value)
+    let requirements = Parser.shared.parseRequirements(from: value)
+    
     if objects.isEmpty {
       errorMessage = "Файл не содержит объектов"
+      showError = true
+      isLoading = false
+      return
+    }
+    
+    if requirements.isEmpty {
+      errorMessage = "Файл не содержит требований"
+      showError = true
+      isLoading = false
       return
     }
     
     parsedObjects = objects
-    errorMessage = nil
+    parsedRequirements = requirements
     navigateToResult = true
+    isLoading = false
   }
   
   func cancelUploud() {

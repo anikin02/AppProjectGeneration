@@ -11,8 +11,9 @@ class ResultViewModel: ObservableObject {
   @Published var mermaidCode: String = ""
   @Published var diagramScale: Double = 1
   @Published var selectedMermaidTheme: String = "Default"
+  @Published var requirements: [String] = []
   
-  let mermaidTheme: [String] = ["Default", "Dracula", "Tokyo Night", ]
+  let mermaidTheme: [String] = ["Default", "Dracula", "Tokyo Night"]
   
   var project: DesignData = DesignData(name: "Test", objects: []) {
     didSet {

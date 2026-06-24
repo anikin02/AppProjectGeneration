@@ -9,19 +9,21 @@ import SwiftUI
 
 struct ApplicationHelpView: View {
   @ObservedObject var viewModel = ApplicationHelpViewModel()
+  var count: Int = 1
   
   var body: some View {
-    VStack(alignment: .leading, spacing: 10) {
-      ScrollView {
-        ForEach(viewModel.topics, id: \.self) { item in
-          Text(item)
+    ScrollView {
+      VStack(alignment: .leading, spacing: 10) {
+        ForEach(Array(viewModel.topics.enumerated()), id: \.offset) { index, item in
+          Text("\(index + 1). \(item)")
             .font(.system(size: 21, weight: .medium))
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
       }
-      .frame(alignment: .leading)
+      .frame(maxWidth: .infinity, alignment: .leading)
     }
     .padding(20)
-    .frame(alignment: .leading)
+    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     .toolbarTitleDisplayMode(.inline)
   }
 }
